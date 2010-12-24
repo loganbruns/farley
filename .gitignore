@@ -1,0 +1,7 @@
+*~
+*.sparcf
+*.o
+*.so
+*/target
+parser/models/*.bin
+cmd
