@@ -7,47 +7,16 @@
   <version>1.0-SNAPSHOT</version>
   <name>parser</name>
   <url>http://maven.apache.org</url>
+  <parent>
+    <groupId>org.gedanken.farley</groupId>
+    <artifactId>farley</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
   <dependencies>
     <dependency>
       <groupId>org.apache.opennlp</groupId>
       <artifactId>opennlp-tools</artifactId>
       <version>1.5.2-incubating</version>
     </dependency>
-    <dependency>
-      <groupId>org.scala-lang</groupId>
-      <artifactId>scala-library</artifactId>
-      <version>2.10.0</version>
-    </dependency>
-    <dependency>
-      <groupId>com.typesafe.akka</groupId>
-      <artifactId>akka-actor_2.10</artifactId>
-      <version>2.1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
-  <build>
-    <sourceDirectory>src/main/scala</sourceDirectory>
-    <testSourceDirectory>src/test/scala</testSourceDirectory>
-    <plugins>
-      <plugin>
-        <groupId>org.scala-tools</groupId>
-        <artifactId>maven-scala-plugin</artifactId>
-	<version>2.15.2</version>
-        <configuration>
-          <scalaVersion>2.10.0</scalaVersion>
-	  <launchers>
-	    <launcher>
-	      <id>default</id>
-	      <mainClass>org.gedanken.farley.parser.CLI</mainClass>
-	    </launcher>
-	  </launchers>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 </project>

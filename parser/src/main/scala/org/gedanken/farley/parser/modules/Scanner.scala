@@ -9,11 +9,11 @@ import scala.util.matching.Regex
 
 class Scanner extends Module {
 
-  val outputDir = new File("/afs/.gedanken.org/media/images/Scans/incoming")
+  val outputDir = new File("/var/farley/incoming")
 
-  val dropboxDir = new File("/farley/www")
+  val dropboxDir = new File("/var/farley/www")
 
-  val dropboxUrl = "http://kafka.gedanken.org/farley"
+  val dropboxUrl = "http://docker.gedanken.org/farley"
 
   val system = ActorSystem("ScannerSystem")
 
@@ -37,7 +37,7 @@ class Scanner extends Module {
 
       val pngpath = path.substring(0, path.length()-4) + ".png"
       
-      var process = new ProcessBuilder("timeout", "75", "officejet", pngpath).start()
+      var process = new ProcessBuilder("timeout", "75", "/app/phantomjs/bin/phantomjs", "/app/scanner/officejet.js", pngpath).start()
 
       log.info("Initiated scan to " + pngpath)
 

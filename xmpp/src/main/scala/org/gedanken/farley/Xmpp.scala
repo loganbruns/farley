@@ -1,5 +1,6 @@
 package org.gedanken.farley
 
+
 import akka.actor._
 import java.io._
 import java.util.Properties
@@ -11,8 +12,8 @@ import scala.collection.mutable.HashSet
 object Xmpp {
   var connection : XMPPConnection = null
   var chats = new HashSet[Chat]
-  val parser = new Parser("../parser/models/en-sent.bin", 
-			  "../parser/models/en-parser-chunking.bin");
+  val parser = new Parser("models/en-sent.bin", 
+			  "models/en-parser-chunking.bin");
   val system = ActorSystem("XmppSystem")
   class Context(userchat: Chat) extends Actor with ActorLogging {
     val chat = userchat
@@ -74,9 +75,5 @@ object Xmpp {
 
   def main(args: Array[String]) {
     start()
-
-    Thread.sleep(7 * 86400000)
-
-    stop()
   }
 }
