@@ -20,13 +20,13 @@
     </dependency>
     <dependency>
       <groupId>org.igniterealtime.smack</groupId>
-      <artifactId>smack</artifactId>
-      <version>3.2.1</version>
+      <artifactId>smack-core</artifactId>
+      <version>4.0.6</version>
     </dependency>
     <dependency>
       <groupId>org.igniterealtime.smack</groupId>
-      <artifactId>smackx</artifactId>
-      <version>3.2.1</version>
+      <artifactId>smack-tcp</artifactId>
+      <version>4.0.6</version>
     </dependency>
   </dependencies>
   <build>

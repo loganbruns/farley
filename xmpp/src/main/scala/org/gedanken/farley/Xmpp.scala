@@ -7,6 +7,7 @@ import java.util.Properties
 import org.gedanken.farley.parser.Parser
 import org.jivesoftware.smack._
 import org.jivesoftware.smack.packet._
+import org.jivesoftware.smack.tcp._
 import scala.collection.mutable.HashSet
 
 object Xmpp {
@@ -36,13 +37,12 @@ object Xmpp {
 
     var config = new ConnectionConfiguration(domain, 5222)
     config.setCompressionEnabled(true)
-    config.setSASLAuthenticationEnabled(true)
 
-    connection = new XMPPConnection(config)
+    connection = new XMPPTCPConnection(config)
     connection.connect()
     connection.login(id, password, "ScalaBot")
 
-    var chatmanager = connection.getChatManager();
+    var chatmanager = ChatManager.getInstanceFor(connection);
 
     for (allowedUser <- allowedUsers) {
 
@@ -52,10 +52,6 @@ object Xmpp {
 
       userChat.addMessageListener(new MessageListener() {
         override def processMessage(chat: Chat, message: Message) {
-	  var body = message.getBody()
-          if (body.startsWith("?"))
-            return
-
 	  chat.sendMessage(parser.process(message.getBody(), context))
 	}
       })
