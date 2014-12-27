@@ -1,4 +1,4 @@
-COMPONENTS = fuseki xmpp
+COMPONENTS = fuseki xmpp postgres
 
 all: compile images
 
