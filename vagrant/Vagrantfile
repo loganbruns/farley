@@ -66,12 +66,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   if File.exists?(::File.join(ENV['HOME'], '.gitconfig'))
     config.vm.provision "file", source: "~/.gitconfig", destination: ".gitconfig"
   end
-  if File.exists?(::File.join(ENV['HOME'], '.emacs'))
-    config.vm.provision "file", source: "~/.emacs", destination: ".emacs"
-  end
 
 $script = <<SCRIPT
 echo Provisioning...
+
+if [ -f /home/vagrant/projs/farley/vagrant/.emacs ]; then
+  cp /home/vagrant/projs/farley/vagrant/.emacs /home/vagrant
+fi
 
 if [ -d /home/vagrant/projs/farley/vagrant/.ssh ]; then
   cp /home/vagrant/projs/farley/vagrant/.ssh/id* /home/vagrant/.ssh/
