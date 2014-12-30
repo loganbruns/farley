@@ -79,9 +79,7 @@ if [ -d /home/vagrant/projs/farley/vagrant/.ssh ]; then
   chown -R vagrant /home/vagrant/.ssh/
 fi
 
-sudo yum install -y java-1.7.0-openjdk maven ntpdate
-
-sudo yum install -y xauth xterm emacs git docker
+sudo yum install -y java-1.7.0-openjdk maven ntpdate unzip xauth xterm emacs git docker
 if [ ! -f /etc/yum.repos.d/winswitch.repo ]; then
   sudo rpm --import http://winswitch.org/gpg.asc
   cd /etc/yum.repos.d/
@@ -110,6 +108,13 @@ fi
 grep docker.gedanken.org /etc/sysconfig/docker > /dev/null
 if [ $? -ne 0 ]; then
   sudo sed -i -e 's/OPTIONS=/OPTIONS=--insecure-registry docker.gedanken.org:5000 /g' /etc/sysconfig/docker
+fi
+
+which sbt 2>&1 > /dev/null
+if [ $? -ne 0 ]; then
+  wget https://dl.bintray.com/sbt/rpm/sbt-0.13.7.rpm
+  sudo yum localinstall -y sbt-0.13.7.rpm
+  rm sbt-0.13.7.rpm
 fi
 
 sudo yum install -y kernel-devel gcc

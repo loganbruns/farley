@@ -18,5 +18,10 @@
       <artifactId>opennlp-tools</artifactId>
       <version>1.5.2-incubating</version>
     </dependency>
+    <dependency>
+      <groupId>org.w3</groupId>
+      <artifactId>banana_jvm_2.10</artifactId>
+      <version>0.7.2-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 </project>

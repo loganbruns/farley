@@ -4,6 +4,9 @@ all: compile images
 
 images: $(patsubst %, build-%, $(COMPONENTS))
 
+thirdparty:
+	make -C thirdparty
+
 compile:
 	mvn compile install
 
@@ -13,3 +16,6 @@ build-% : %/Dockerfile
 publish:
 	sudo docker tag farley-xmpp docker.gedanken.org:5000/farley-xmpp
 	sudo docker push docker.gedanken.org:5000/farley-xmpp
+
+.PHONY: thirdparty
+
