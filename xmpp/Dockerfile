@@ -29,6 +29,6 @@ WORKDIR /app
 
 ADD target/xmpp-1.0-SNAPSHOT.jar /app/
 ADD target/lib /app/lib/
-ADD scanner /app/scanner/
+ADD target/scanner /app/scanner/
 
 CMD java -jar /app/xmpp-1.0-SNAPSHOT.jar
