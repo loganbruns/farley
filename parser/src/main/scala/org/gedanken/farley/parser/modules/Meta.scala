@@ -3,6 +3,8 @@ package org.gedanken.farley.parser.modules
 import akka.actor._
 import org.w3.banana._
 import org.w3.banana.diesel._
+import scala.util.Failure
+import scala.util.Success
 import scala.util.Try
 import scala.util.matching.Regex
 
@@ -28,12 +30,19 @@ class Meta[Rdf <: RDF, Store](ds : Store)
         -- URI("http://gedanken.org/farley/location") ->- location
     ).graph
 
-    dataset.appendToGraph(URI("http://gedanken.org/farley"), g)
+    rdfStore.rw(dataset, { 
+      dataset.appendToGraph(URI("http://gedanken.org/farley"), g) 
+    })
 
     return "Remembering that your " + subject + " is at " + location
   }
 
   def describeKnowledge(matcher: Regex.Match, context: ActorRef) : String = {
-    dataset.getGraph(URI("http://gedanken.org/farley")).toString
+    rdfStore.r(dataset, { 
+      dataset.getGraph(URI("http://gedanken.org/farley")) match {
+        case Success(g) => g.toString
+        case Failure(e) => "Unable to retrieve graph: " + e
+      }
+    }).get
   }
 }
