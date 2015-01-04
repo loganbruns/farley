@@ -22,7 +22,7 @@ class Scanner extends Module {
 	     new Regex(".*\\((NNP|VB.?) [sS]can\\).*\\(TO to\\).*\\((NNP?|[.]|CD) \"?([^)]*[^).])\"?\\.?\\).*", "action", "path_type", "path") ::
 	     Nil,
 	     scan) ::
-    new Rule(new Regex(".*\\(NNP [Uu]pdate\\).*\\(\\. pdfs?.?\\).*") :: Nil, pdf) :: Nil
+    new Rule(new Regex(".*\\(NNP [Uu]pdate\\).*\\(\\. [pP][dD][fF]s?.?\\).*") :: Nil, pdf) :: Nil
 
   val random = new SecureRandom
     

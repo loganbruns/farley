@@ -27,8 +27,6 @@ RUN printf "changeit\nyes\n" | keytool -importcert -file im.crt -keystore /usr/l
 
 WORKDIR /app
 
-VOLUME /root/.farley /var/farley/incoming /var/farley/www
-
 ADD target/xmpp-1.0-SNAPSHOT.jar /app/
 ADD target/lib /app/lib/
 ADD scanner /app/scanner/

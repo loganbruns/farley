@@ -1,6 +1,7 @@
 COMPONENTS = fuseki xmpp postgres
 
 all: compile images
+	mkdir -p /tmp/{incoming,www,tdb}
 
 images: $(patsubst %, build-%, $(COMPONENTS))
 

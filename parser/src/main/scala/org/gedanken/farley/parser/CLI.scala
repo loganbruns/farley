@@ -3,8 +3,11 @@ package org.gedanken.farley.parser
 import akka.actor._
 
 object CLI {
-  val parser = new Parser("./models/en-sent.bin", 
-			  "./models/en-parser-chunking.bin");
+  val parser = new Parser(
+    "./models/en-sent.bin",
+    "./models/en-parser-chunking.bin",
+    "/tmp/tdb"
+  );
 
   val system = ActorSystem("CLISystem")
 

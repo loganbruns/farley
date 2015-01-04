@@ -1,18 +1,19 @@
 package org.gedanken.farley.parser
 
 import akka.actor.ActorRef
+import com.hp.hpl.jena.tdb.TDBFactory
+import com.hp.hpl.jena.query.Dataset
 import opennlp.tools.parser._
 import opennlp.tools.sentdetect._
 import opennlp.tools.cmdline.parser.ParserTool
 import org.gedanken.farley.parser.modules._
+import org.w3.banana.jena.Jena
 import java.io.FileInputStream
 
-class Parser(sentenceModelPath : String, parserModelPath : String) {
-
-  println("Loading modules.")
-  private val modules = 
-    new Help() :: new Scanner() :: Nil
-  println("Done loading modules.")
+class Parser(
+  sentenceModelPath : String, 
+  parserModelPath : String,
+  dataSetPath : String) {
 
   println("Loading sentence model.")
   private val sentenceModel = new SentenceModel(new FileInputStream(sentenceModelPath))
@@ -23,6 +24,15 @@ class Parser(sentenceModelPath : String, parserModelPath : String) {
   private val parserModel = new ParserModel(new FileInputStream(parserModelPath))
   private val parser = ParserFactory.create(parserModel)
   println("Done loading parser model.")
+
+  println("Loading dataset.")
+  private val dataset = TDBFactory.createDataset(dataSetPath)
+  println("Done loading dataset.")
+
+  println("Loading modules.")
+  private val modules = 
+    new Help() :: new Meta[Jena, Dataset](dataset) :: new Scanner() :: Nil
+  println("Done loading modules.")
 
   def process(input: String, context: ActorRef) : String = {
 

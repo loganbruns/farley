@@ -13,9 +13,13 @@ import scala.collection.mutable.HashSet
 object Xmpp {
   var connection : XMPPConnection = null
   var chats = new HashSet[Chat]
-  val parser = new Parser("models/en-sent.bin", 
-			  "models/en-parser-chunking.bin");
+  val parser = new Parser(
+    "models/en-sent.bin",
+    "models/en-parser-chunking.bin",
+    "/var/farley/tdb"
+  );
   val system = ActorSystem("XmppSystem")
+
   class Context(userchat: Chat) extends Actor with ActorLogging {
     val chat = userchat
 
