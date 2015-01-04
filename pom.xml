@@ -6,6 +6,18 @@
   <packaging>pom</packaging>
   <version>1.0-SNAPSHOT</version>
   <name>farley</name>
+  <inceptionYear>2013</inceptionYear>
+  <organization>
+    <name>org.gedanken</name>
+  </organization>
+  <url>https://github.com/loganbruns/farley</url>
+  <developers>
+    <developer>
+      <id>logan</id>
+      <name>Logan O&amp;Sullivan Bruns</name>
+      <url>https://gedanken.org/</url>
+    </developer>
+  </developers>
   <modules>
     <module>parser</module>
     <module>xmpp</module>
