@@ -50,7 +50,9 @@ class Parser(
 
   println("Loading modules.")
   private val modules = 
-    new Help() :: new Meta[Jena, Dataset](dataset) :: new Scanner() :: Nil
+    new Help() :: new Meta[Jena, Dataset](dataset) ::
+    new Scanner() :: new Show[Jena, Dataset](dataset) ::
+    Nil
   println("Done loading modules.")
 
   def process(input: String, context: ActorRef) : String = {
