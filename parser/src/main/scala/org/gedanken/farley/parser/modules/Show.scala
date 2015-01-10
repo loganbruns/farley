@@ -4,7 +4,7 @@ package org.gedanken.farley.parser.modules
   * 
   * parser/module/Show.scala
   * 
-  * Copyright 2014 Logan O'Sullivan Bruns
+  * Copyright 2015 Logan O'Sullivan Bruns
   * 
   * Licensed under the Apache License, Version 2.0 (the "License");
   * you may not use this file except in compliance with the License.
@@ -34,13 +34,21 @@ import scala.util.Try
 import scala.util.matching.Regex
 
 class Show[Rdf <: RDF, Store](dataset : Store)
-  (implicit ops: RDFOps[Rdf], rdfStore: RDFStore[Rdf, Try, Store])
+  (implicit 
+    ops: RDFOps[Rdf], 
+    rdfStore: RDFStore[Rdf, Try, Store],
+    sparqlOps: SparqlOps[Rdf],
+    sparqlEngine: SparqlEngine[Rdf, Try, Store]
+  )
     extends Module {
   import ops._
   import rdfStore.graphStoreSyntax._
+  import sparqlEngine.sparqlEngineSyntax._
+  import sparqlOps._
 
   val rules : List[Rule] =
-    new Rule(new Regex(".*\\(NP \\(NNP Show\\)\\).*\\((NN|\\.) (http://[^)]*)\\).*", "literal_type", "location") :: Nil, showLiteral) :: Nil
+    new Rule(new Regex(".*\\(NP \\(NNP Show\\)\\).*\\((NN|\\.) (http://[^)]*)\\).*", "literal_type", "location") :: Nil, showLiteral) :: 
+    new Rule(new Regex(".*\\(NP \\(NNP Show\\)\\).*\\(NP \\(PRP\\$ my\\) (.*)\\)\\)\\)", "location") :: new Regex(".*\\(VP \\(VB Show\\)\\).*\\(NP \\(PRP\\$ my\\) (.*)\\)\\)\\)", "location") :: Nil, show) :: Nil
 
   val dropboxDir = new File("/var/farley/www")
 
@@ -58,6 +66,35 @@ class Show[Rdf <: RDF, Store](dataset : Store)
     display ! ImageRef(context, location, location)
 
     return "Okay, will show you " + location
+  }
+
+  def show(matcher: Regex.Match, context: ActorRef) : String = {
+    val name = matcher group "location"
+
+    val query = s"""
+      |prefix farley: <http://gedanken.org/farley/>
+      |
+      |SELECT DISTINCT ?location WHERE {
+      |  GRAPH <http://gedanken.org/farley> {
+      |    "${name}" farley:location ?location
+      |  }
+      |}
+    """.stripMargin 
+
+    val rows = rdfStore.r(dataset, {
+      dataset.executeSelect(parseSelect(query).get).get.iterator.to[List]
+    }).get
+
+    if (rows.length == 0)
+      return null
+
+    val locations: List[String] = rows.map {
+      row => row("location").get.as[String].get
+    }
+
+    display ! ImageRef(context, name, locations(0))
+
+    return "Okay, will show you " + name
   }
 
   case class ImageRef(context: ActorRef, description: String, url: String)
