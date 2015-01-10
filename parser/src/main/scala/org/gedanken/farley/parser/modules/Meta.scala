@@ -45,7 +45,7 @@ class Meta[Rdf <: RDF, Store](ds : Store)
     val location = matcher group "location"
 
     val g: Rdf#Graph = (
-      bnode(subject)
+      Literal(subject)
         -- URI("http://gedanken.org/farley/location") ->- location
     ).graph
 
