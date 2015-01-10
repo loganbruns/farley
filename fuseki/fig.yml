@@ -1,0 +1,4 @@
+fuseki:
+  image: farley-fuseki
+  volumes:
+    - /tmp/tdb:/var/jena-fuseki
