@@ -60,7 +60,7 @@ class Show[Rdf <: RDF, Store](dataset : Store)
     
   val display = system.actorOf(Props(new ShowActor).withRouter(RoundRobinRouter(nrOfInstances = 5)))
 
-  def showLiteral(matcher: Regex.Match, context: ActorRef) : String = {
+  def showLiteral(matcher: Regex.Match, context: ModuleContext) : String = {
     val location = matcher group "location"
 
     display ! ImageRef(context, location, location)
@@ -68,7 +68,7 @@ class Show[Rdf <: RDF, Store](dataset : Store)
     return "Okay, will show you " + location
   }
 
-  def show(matcher: Regex.Match, context: ActorRef) : String = {
+  def show(matcher: Regex.Match, context: ModuleContext) : String = {
     val name = matcher group "location"
     val willShow = showName(name, context)
     if (willShow != null)
@@ -80,9 +80,7 @@ class Show[Rdf <: RDF, Store](dataset : Store)
     return showName(imageName, context)
   }
 
-  def showName(name: String, context: ActorRef) : String = {
-    println("DEBUG: trying name: " + name)
-
+  def showName(name: String, context: ModuleContext) : String = {
     val query = s"""
       |prefix farley: <http://gedanken.org/farley/>
       |
@@ -109,11 +107,11 @@ class Show[Rdf <: RDF, Store](dataset : Store)
     return "Okay, will show you " + name
   }
 
-  case class ImageRef(context: ActorRef, description: String, url: String)
+  case class ImageRef(context: ModuleContext, description: String, url: String)
 
   class ShowActor extends Actor with ActorLogging {
 
-    def show(context: ActorRef, description: String, url: String): Unit = {
+    def show(context: ModuleContext, description: String, url: String): Unit = {
       log.info("Received show request for " + description)
 
       val name = "show-" + random.nextLong

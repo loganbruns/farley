@@ -4,7 +4,7 @@ package org.gedanken.farley.parser.modules
   * 
   * parser/module/Scanner.scala
   * 
-  * Copyright 2013 Logan O'Sullivan Bruns
+  * Copyright 2013, 2014, 2015 Logan O'Sullivan Bruns
   * 
   * Licensed under the Apache License, Version 2.0 (the "License");
   * you may not use this file except in compliance with the License.
@@ -47,11 +47,11 @@ class Scanner extends Module {
     
   val scanner = system.actorOf(Props(new ScanActor).withRouter(RoundRobinRouter(nrOfInstances = 10)))
 
-  case class Scan(context: ActorRef, name: String, path: String)
+  case class Scan(context: ModuleContext, name: String, path: String)
 
   class ScanActor extends Actor with ActorLogging {
 
-    def scan(context: ActorRef, name: String, path: String): Unit = {
+    def scan(context: ModuleContext, name: String, path: String): Unit = {
       log.info("Received scan request for " + name)
 
       val pngpath = path.substring(0, path.length()-4) + ".png"
@@ -77,7 +77,7 @@ class Scanner extends Module {
 
   class TailorActor extends Actor with ActorLogging {
 
-    def tailor(context: ActorRef, name: String, path: String): Unit = {
+    def tailor(context: ModuleContext, name: String, path: String): Unit = {
       log.info("Received tailor request for " + name)
 
       val pngpath = path.substring(0, path.length()-4) + ".png"
@@ -135,7 +135,7 @@ class Scanner extends Module {
     }
   }
 
-  def scan(matcher: Regex.Match, context: ActorRef) : String = {
+  def scan(matcher: Regex.Match, context: ModuleContext) : String = {
     val path = matcher group "path"
     if (!path.endsWith(".tif"))
       return "Unsupported file format " + path
@@ -151,11 +151,11 @@ class Scanner extends Module {
 
   val pdfgenerator = system.actorOf(Props(new PDFActor), name = "pdfgenerator")
 
-  case class PDF(context: ActorRef, prefix: String)
+  case class PDF(context: ModuleContext, prefix: String)
 
   class PDFActor extends Actor with ActorLogging {
 
-    def pdf(context: ActorRef, prefix: String): Unit = {
+    def pdf(context: ModuleContext, prefix: String): Unit = {
       val pdfname = prefix + ".pdf"
 
       log.info("Received pdf generation request for " + pdfname)
@@ -214,7 +214,7 @@ class Scanner extends Module {
     }
   }
 
-  def pdf(matcher: Regex.Match, context: ActorRef) : String = {
+  def pdf(matcher: Regex.Match, context: ModuleContext) : String = {
     val baseRegex = new Regex("(.*)_[0-9][0-9]?.tif", "base")
 
     val bases = 

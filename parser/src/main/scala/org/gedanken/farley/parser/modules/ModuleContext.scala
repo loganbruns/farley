@@ -2,9 +2,9 @@ package org.gedanken.farley.parser.modules
 
 /**
   * 
-  * parser/module/Help.scala
+  * parser/module/ModuleContext.scala
   * 
-  * Copyright 2013, 2014, 2015 Logan O'Sullivan Bruns
+  * Copyright 2015 Logan O'Sullivan Bruns
   * 
   * Licensed under the Apache License, Version 2.0 (the "License");
   * you may not use this file except in compliance with the License.
@@ -19,15 +19,14 @@ package org.gedanken.farley.parser.modules
   * limitations under the License.
   */
 
-import akka.actor.ActorRef
-import scala.util.matching.Regex
+import org.gedanken.farley.parser.Message
 
-class Help extends Module {
+import akka.actor.{Actor, ActorRef}
+import Actor._
 
-  val rules : List[Rule] = 
-    new Rule(new Regex("\\(TOP \\(VB help\\)\\)") :: Nil, process) :: Nil
+class ModuleContext(actor : ActorRef) {
 
-  def process(matcher: Regex.Match, context: ModuleContext) : String = {
-    return "Help for " + matcher
+  def ! (message: Any):Unit = {
+    actor ! message
   }
 }

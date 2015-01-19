@@ -4,7 +4,7 @@ package org.gedanken.farley.parser
   * 
   * parser/Parser.scala
   * 
-  * Copyright 2013 Logan O'Sullivan Bruns
+  * Copyright 2013, 2014, 2015 Logan O'Sullivan Bruns
   * 
   * Licensed under the Apache License, Version 2.0 (the "License");
   * you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ class Parser(
   def process(input: String, context: ActorRef) : String = {
 
     var nlpOnly = false;
-    var sentences =
+    val sentences =
       if (!input.startsWith("?")) 
 	detector.sentDetect(input) 
       else { 
@@ -69,7 +69,7 @@ class Parser(
     val response = new StringBuilder();
     val buffer = new StringBuffer();
     for (sentence <- sentences) {
-      var parses = ParserTool.parseLine(sentence, parser, 5)
+      val parses = ParserTool.parseLine(sentence, parser, 5)
 
       val variants : Array[String] =
 	for (parse <- parses) yield {
@@ -85,8 +85,10 @@ class Parser(
 	  response.append("\n")
 	}
       else {
+        val mc = new ModuleContext(context)
+
 	for (module <- modules) {
-	  val result = module.evaluate(variants, context)
+	  val result = module.evaluate(variants, mc)
 	  if (result != null) {
 	    response.append(result)
 	    response.append("\n")

@@ -4,7 +4,7 @@ package org.gedanken.farley.parser.modules
   * 
   * parser/module/Meta.scala
   * 
-  * Copyright 2014 Logan O'Sullivan Bruns
+  * Copyright 2014, 2015 Logan O'Sullivan Bruns
   * 
   * Licensed under the Apache License, Version 2.0 (the "License");
   * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ class Meta[Rdf <: RDF, Store](ds : Store)
       learnLocation) :: 
     new Rule(new Regex(".*\\(SBARQ \\(WHNP \\(WP What\\)\\) \\(SQ \\(VBP do\\) \\(NP \\(PRP you\\)\\)\\) \\(\\. know\\?\\)\\)") :: Nil, describeKnowledge) :: Nil
 
-  def learnLocation(matcher: Regex.Match, context: ActorRef) : String = {
+  def learnLocation(matcher: Regex.Match, context: ModuleContext) : String = {
     val subject = matcher group "subject"
     val location = matcher group "location"
 
@@ -56,7 +56,7 @@ class Meta[Rdf <: RDF, Store](ds : Store)
     return "Remembering that your " + subject + " is at " + location
   }
 
-  def describeKnowledge(matcher: Regex.Match, context: ActorRef) : String = {
+  def describeKnowledge(matcher: Regex.Match, context: ModuleContext) : String = {
     rdfStore.r(dataset, { 
       dataset.getGraph(URI("http://gedanken.org/farley")) match {
         case Success(g) => g.toString
