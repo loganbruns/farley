@@ -22,5 +22,8 @@ publish:
 	sudo docker tag farley-xmpp docker.gedanken.org:5000/farley-xmpp
 	sudo docker push docker.gedanken.org:5000/farley-xmpp
 
+check-versions:
+	mvn versions:display-dependency-updates
+
 .PHONY: thirdparty js-tools
 
