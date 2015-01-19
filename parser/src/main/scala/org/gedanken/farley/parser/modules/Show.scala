@@ -25,7 +25,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
 import java.security.SecureRandom
-import org.gedanken.farley.parser.Message
+import org.gedanken.farley.parser.{Message, PhraseTransforms, SExpression}
 import org.w3.banana._
 import org.w3.banana.diesel._
 import scala.io.Source
@@ -70,6 +70,18 @@ class Show[Rdf <: RDF, Store](dataset : Store)
 
   def show(matcher: Regex.Match, context: ActorRef) : String = {
     val name = matcher group "location"
+    val willShow = showName(name, context)
+    if (willShow != null)
+      return willShow
+
+    val imageName = 
+      SExpression.unapply(PhraseTransforms.makePossessive(SExpression.apply(name)) ++ List(List("NN", "image")))
+
+    return showName(imageName, context)
+  }
+
+  def showName(name: String, context: ActorRef) : String = {
+    println("DEBUG: trying name: " + name)
 
     val query = s"""
       |prefix farley: <http://gedanken.org/farley/>
@@ -128,7 +140,4 @@ class Show[Rdf <: RDF, Store](dataset : Store)
         show(context, description, url)
     }
   }
-
-  // TODO: look up what a non-literal such as my front door is defined
-  // as in the rdf store
 }
