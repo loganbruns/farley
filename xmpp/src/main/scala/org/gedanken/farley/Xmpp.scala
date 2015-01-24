@@ -74,7 +74,11 @@ object Xmpp {
 
       userChat.addMessageListener(new MessageListener() {
         override def processMessage(chat: Chat, message: Message) {
-	  chat.sendMessage(parser.process(message.getBody(), context))
+          val body = message.getBody
+          if (body != null)
+            chat.sendMessage(parser.process(message.getBody(), context))
+          else
+            println("Ignoring control message.")
 	}
       })
 
