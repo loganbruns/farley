@@ -27,4 +27,33 @@ object Faces {
 
   nu.pattern.OpenCV.loadShared()
 
+  val FRONTAL_FACE = "/lbpcascade_frontalface.xml"
+  val RIGHT_PROFILE_FACE = "/lbpcascade_profileface.xml"
+
+  def detect(image: Mat, classifier: String) : MatOfRect = {
+    val detector = new CascadeClassifier(getClass().getResource(classifier).getPath())
+    val detections = new MatOfRect
+    detector.detectMultiScale(image, detections)
+    return detections
+  }
+
+  def annotate(image: Mat, detections: MatOfRect, color: Scalar) : Mat = {
+    for (rect <- detections.toArray)
+      Core.rectangle(
+        image,
+        new Point(rect.x, rect.y),
+        new Point(rect.x + rect.width, rect.y + rect.height),
+        color)
+
+    return image
+  }
+
+  def load(path: String) : Mat = {
+    Highgui.imread(path)
+  }
+
+  def save(path: String, image: Mat) : Unit = {
+    Highgui.imwrite(path, image)
+  }
+
 }
