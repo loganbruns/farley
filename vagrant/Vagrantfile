@@ -87,6 +87,15 @@ if [ ! -f /etc/yum.repos.d/winswitch.repo ]; then
   sudo yum install -y xpra
 fi
 
+if [ ! -d /opt/obuildfactory ]; then
+  cd /tmp
+  git clone --depth 1 https://github.com/loganbruns/obuildfactory.git --branch centos7_openjdk8_rpms
+  yum localinstall -y obuildfactory/jdk-1.8.0-openjdk-x86_64-1.8.0.*.rpm
+  rm -rf obuildfactory
+  printf "export JAVA_HOME=/opt/obuildfactory/jdk-1.8.0-openjdk-x86_64\n" >> ~vagrant/.bashrc
+  printf "export PATH=\$JAVA_HOME/bin:\$PATH\n" >> ~vagrant/.bashrc
+fi
+
 chkconfig docker > /dev/null
 if [ $? -ne 0 ]; then
   sudo chkconfig docker on
@@ -122,6 +131,7 @@ sudo yum update -y
 sudo /etc/rc.d/init.d/vboxadd setup
 
 ntpdate -u services.gedanken.org
+ntpdate -u pravda.gedanken.org
 
 date > /etc/vagrant_provisioned_at
 SCRIPT

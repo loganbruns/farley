@@ -1,7 +1,18 @@
 FROM centos:centos7
 MAINTAINER Logan O'Sullivan Bruns <logan@gedanken.org>
 
-RUN yum install -y java-1.7.0-openjdk
+WORKDIR /tmp
+
+RUN yum install -y git && \
+  git clone --depth 1 https://github.com/loganbruns/obuildfactory.git --branch centos7_openjdk8_rpms && \
+  yum remove -y git && \
+  yum autoremove -y && \
+  yum localinstall -y obuildfactory/jdk-1.8.0-openjdk-x86_64-1.8.0.*.rpm && \
+  rm -rf obuildfactory
+
+ENV JAVA_HOME /opt/obuildfactory/jdk-1.8.0-openjdk-x86_64
+
+ENV PATH $PATH:$JAVA_HOME/bin
 
 WORKDIR /app/models/
 
@@ -23,7 +34,7 @@ RUN wget ftp://ftp.pbone.net/mirror/ftp5.gwdg.de/pub/opensuse/repositories/X11:/
 WORKDIR /etc/ssl/certs
 
 ADD im.crt /etc/ssl/certs/
-RUN printf "changeit\nyes\n" | keytool -importcert -file im.crt -keystore /usr/lib/jvm/java-1.7.0-openjdk-1.7.0.71-2.5.3.1.el7_0.x86_64/jre/lib/security/cacerts
+RUN printf "changeit\nyes\n" | keytool -importcert -file im.crt -keystore $JAVA_HOME/jre/lib/security/cacerts
 
 WORKDIR /app
 
