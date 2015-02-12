@@ -1,5 +1,6 @@
 package org.gedanken.org.farley.net
 
+import java.io.ByteArrayOutputStream
 import org.apache.commons.net.ftp.FTPClient
 
 /**
@@ -29,6 +30,8 @@ class FTP(hostname: String) {
 
   client.enterLocalPassiveMode
 
+  client.setFileType(org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE)
+
   def login(username: String, password: String) = 
     client.login(username, password)
 
@@ -42,4 +45,10 @@ class FTP(hostname: String) {
 
   def listFiles(directory: String) = 
     client.listFiles(directory)
+
+  def retrieve(path: String) : Array[Byte] = {
+    val baos = new ByteArrayOutputStream
+    client.retrieveFile(path, baos)
+    return baos.toByteArray
+  }
 }
