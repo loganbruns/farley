@@ -19,6 +19,7 @@
     </developer>
   </developers>
   <modules>
+    <module>net</module>
     <module>parser</module>
     <module>vision</module>
     <module>xmpp</module>
