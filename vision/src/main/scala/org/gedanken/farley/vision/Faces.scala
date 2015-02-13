@@ -52,6 +52,13 @@ object Faces {
     Highgui.imread(path)
   }
 
+  def load(bytes: Array[Byte]) : Mat = {
+    Highgui.imdecode(
+      new MatOfByte(bytes: _*),
+      Highgui.CV_LOAD_IMAGE_ANYDEPTH | Highgui.CV_LOAD_IMAGE_COLOR
+    )
+  }
+
   def save(path: String, image: Mat) : Unit = {
     Highgui.imwrite(path, image)
   }
