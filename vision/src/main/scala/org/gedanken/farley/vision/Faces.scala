@@ -29,11 +29,29 @@ object Faces {
 
   val FRONTAL_FACE = "/lbpcascade_frontalface.xml"
   val RIGHT_PROFILE_FACE = "/lbpcascade_profileface.xml"
+  val DEFAULT_MIN_SIZE = new Size(30, 30)
+  val DEFAULT_MAX_SIZE = new Size()
 
-  def detect(image: Mat, classifier: String) : MatOfRect = {
+  def detect(
+    image: Mat,
+    classifier: String,
+    scaleFactor: Double = 1.1,
+    minNeighbors: Integer = 3,
+    flags: Integer = 0,
+    minSize: Size = DEFAULT_MIN_SIZE,
+    maxSize: Size = DEFAULT_MAX_SIZE)
+      : MatOfRect = {
     val detector = new CascadeClassifier(getClass().getResource(classifier).getPath())
     val detections = new MatOfRect
-    detector.detectMultiScale(image, detections)
+    detector.detectMultiScale(
+      image,
+      detections,
+      scaleFactor,
+      minNeighbors,
+      flags,
+      minSize,
+      maxSize
+    )
     return detections
   }
 
