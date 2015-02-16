@@ -15,6 +15,9 @@ js-tools:
 compile:
 	mvn compile install
 
+clean:
+	mvn clean
+
 build-% : %/Dockerfile
 	sudo docker build -t farley-`dirname $<` `dirname $<` 
 
