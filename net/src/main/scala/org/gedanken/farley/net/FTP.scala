@@ -48,7 +48,9 @@ class FTP(hostname: String) {
 
   def retrieve(path: String) : Array[Byte] = {
     val baos = new ByteArrayOutputStream
-    client.retrieveFile(path, baos)
+    synchronized {
+      client.retrieveFile(path, baos)
+    }
     return baos.toByteArray
   }
 }
