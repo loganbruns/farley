@@ -19,6 +19,7 @@ package org.gedanken.farley.parser
   * limitations under the License.
   */
 
+import scala.language.postfixOps
 import scala.util.parsing.combinator.RegexParsers
 
 object SExpression extends RegexParsers {
