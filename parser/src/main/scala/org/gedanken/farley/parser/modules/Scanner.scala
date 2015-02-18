@@ -24,6 +24,7 @@ import akka.routing.RoundRobinRouter
 import java.io.File
 import java.security.SecureRandom
 import org.gedanken.farley.parser.Message
+import scala.language.postfixOps
 import scala.util.matching.Regex
 
 class Scanner extends Module {
