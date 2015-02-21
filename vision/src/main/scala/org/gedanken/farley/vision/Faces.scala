@@ -20,7 +20,6 @@ package org.gedanken.org.farley.vision
   */
 
 import org.opencv.core._
-import org.opencv.highgui._
 import org.opencv.objdetect._
 
 object Faces {
@@ -53,32 +52,6 @@ object Faces {
       maxSize
     )
     return detections
-  }
-
-  def annotate(image: Mat, detections: MatOfRect, color: Scalar) : Mat = {
-    for (rect <- detections.toArray)
-      Core.rectangle(
-        image,
-        new Point(rect.x, rect.y),
-        new Point(rect.x + rect.width, rect.y + rect.height),
-        color)
-
-    return image
-  }
-
-  def load(path: String) : Mat = {
-    Highgui.imread(path)
-  }
-
-  def load(bytes: Array[Byte]) : Mat = {
-    Highgui.imdecode(
-      new MatOfByte(bytes: _*),
-      Highgui.CV_LOAD_IMAGE_ANYDEPTH | Highgui.CV_LOAD_IMAGE_COLOR
-    )
-  }
-
-  def save(path: String, image: Mat) : Unit = {
-    Highgui.imwrite(path, image)
   }
 
 }

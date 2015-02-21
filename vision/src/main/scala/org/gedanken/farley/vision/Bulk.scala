@@ -32,7 +32,7 @@ object Bulk {
     images: Seq[FTPFile]
   ) : Seq[FTPFile] = {
     images.par.filter((file : FTPFile) => {
-      val image = Faces.load(ftp.retrieve(directory + "/" + file.getName))
+      val image = Media.load(ftp.retrieve(directory + "/" + file.getName))
       val flippedImage = new Mat
 
       Core.flip(image, flippedImage, 0)

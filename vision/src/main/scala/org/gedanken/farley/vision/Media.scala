@@ -2,7 +2,7 @@ package org.gedanken.org.farley.vision
 
 /**
   * 
-  * vision/FacesTest.scala
+  * vision/Media.scala
   * 
   * Copyright 2015 Logan O'Sullivan Bruns
   * 
@@ -20,27 +20,36 @@ package org.gedanken.org.farley.vision
   */
 
 import org.opencv.core._
-import org.scalatest._
+import org.opencv.highgui._
 
-class FacesTest extends FlatSpec with Matchers {
+object Media {
 
-  behavior of "Face recognition"
+  nu.pattern.OpenCV.loadShared()
 
-  var image : Mat = null
+  def annotate(image: Mat, detections: MatOfRect, color: Scalar) : Mat = {
+    for (rect <- detections.toArray)
+      Core.rectangle(
+        image,
+        new Point(rect.x, rect.y),
+        new Point(rect.x + rect.width, rect.y + rect.height),
+        color)
 
-  it should "load an image" in {
-    image = Media.load(getClass().getResource("/lena.png").getPath())
-
-    (image) should not be (null)
+    return image
   }
 
-  it should "recognize a face" in {
-    val detections = Faces.detect(image, Faces.FRONTAL_FACE)
-    (detections.toArray.length) should be (1)
+  def load(path: String) : Mat = {
+    Highgui.imread(path)
   }
 
-  it should "not recognize a face if face must be too large" in {
-    val detections = Faces.detect(image, Faces.FRONTAL_FACE, 1.1, 3, 0, new Size(400, 400))
-    (detections.toArray.length) should be (0)
+  def load(bytes: Array[Byte]) : Mat = {
+    Highgui.imdecode(
+      new MatOfByte(bytes: _*),
+      Highgui.CV_LOAD_IMAGE_ANYDEPTH | Highgui.CV_LOAD_IMAGE_COLOR
+    )
   }
+
+  def save(path: String, image: Mat) : Unit = {
+    Highgui.imwrite(path, image)
+  }
+
 }
