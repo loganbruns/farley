@@ -21,6 +21,7 @@ package org.gedanken.org.farley.vision
 
 import org.opencv.core._
 import org.opencv.highgui._
+import scala.collection.mutable.ArrayBuffer
 
 object Media {
 
@@ -50,6 +51,17 @@ object Media {
 
   def save(path: String, image: Mat) : Unit = {
     Highgui.imwrite(path, image)
+  }
+
+  def collect_frames[B](path: String, process: Mat => B) : Seq[B] = {
+    val collection = new ArrayBuffer[B]
+
+    val video = new VideoCapture(path)
+    val image = new Mat
+    while (video.read(image))
+      collection += process(image)
+
+    return collection.result
   }
 
 }
