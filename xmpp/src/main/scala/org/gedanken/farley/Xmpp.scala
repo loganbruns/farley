@@ -77,8 +77,11 @@ object Xmpp {
           val body = message.getBody
           if (body != null)
             chat.sendMessage(parser.process(message.getBody(), context))
-          else
+          else {
             println("Ignoring control message.")
+
+            userChat.sendMessage("Hello, I'm " + id + " and I'm still ready to help you now.")
+          }
 	}
       })
 
