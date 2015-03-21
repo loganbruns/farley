@@ -96,6 +96,15 @@ if [ ! -d /opt/obuildfactory ]; then
   printf "export PATH=\$JAVA_HOME/bin:\$PATH\n" >> ~vagrant/.bashrc
 fi
 
+if [ ! -d /opt/OpenCV ]; then
+  cd /tmp
+  git clone --depth 1 https://github.com/loganbruns/opencv.git --branch centos7_opencv_3_0_0_beta_725
+  tar -C /opt -xzf opencv/OpenCV-3.0.0-beta-725-g9683f93-x86_64.tar.gz
+  mv /opt/OpenCV-3.0.0* /opt/OpenCV
+  rm -rf opencv
+  printf "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:/opt/OpenCV/lib\n" >> ~vagrant/.bashrc
+fi
+
 chkconfig docker > /dev/null
 if [ $? -ne 0 ]; then
   sudo chkconfig docker on
