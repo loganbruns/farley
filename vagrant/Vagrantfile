@@ -79,7 +79,8 @@ if [ -d /home/vagrant/projs/farley/vagrant/.ssh ]; then
   chown -R vagrant /home/vagrant/.ssh/
 fi
 
-sudo yum install -y java-1.7.0-openjdk maven ntpdate unzip xauth xterm emacs git docker
+sudo yum install -y java-1.7.0-openjdk maven ntpdate unzip xauth xterm emacs git docker prelink
+
 if [ ! -f /etc/yum.repos.d/winswitch.repo ]; then
   sudo rpm --import http://winswitch.org/gpg.asc
   cd /etc/yum.repos.d/
@@ -101,8 +102,9 @@ if [ ! -d /opt/OpenCV ]; then
   git clone --depth 1 https://github.com/loganbruns/opencv.git --branch centos7_opencv_3_0_0_beta_725
   tar -C /opt -xzf opencv/OpenCV-3.0.0-beta-725-g9683f93-x86_64.tar.gz
   mv /opt/OpenCV-3.0.0* /opt/OpenCV
+  execstack -c /opt/OpenCV/share/OpenCV/java/libopencv_java300.so
   rm -rf opencv
-  printf "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:/opt/OpenCV/lib\n" >> ~vagrant/.bashrc
+  printf 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/OpenCV/lib:/opt/OpenCV/share/OpenCV/java\n' >> ~vagrant/.bashrc
 fi
 
 chkconfig docker > /dev/null
