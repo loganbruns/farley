@@ -24,7 +24,7 @@ import org.opencv.objdetect._
 
 object Faces {
 
-  nu.pattern.OpenCV.loadShared()
+  System.loadLibrary(Core.NATIVE_LIBRARY_NAME)
 
   val FRONTAL_FACE = "/lbpcascade_frontalface.xml"
   val RIGHT_PROFILE_FACE = "/lbpcascade_profileface.xml"

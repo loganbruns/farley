@@ -20,16 +20,18 @@ package org.gedanken.org.farley.vision
   */
 
 import org.opencv.core._
-import org.opencv.highgui._
+import org.opencv.imgcodecs.Imgcodecs
+import org.opencv.imgproc.Imgproc
+import org.opencv.videoio.VideoCapture
 import scala.collection.mutable.ArrayBuffer
 
 object Media {
 
-  nu.pattern.OpenCV.loadShared()
+  System.loadLibrary(Core.NATIVE_LIBRARY_NAME)
 
   def annotate(image: Mat, detections: MatOfRect, color: Scalar) : Mat = {
     for (rect <- detections.toArray)
-      Core.rectangle(
+      Imgproc.rectangle(
         image,
         new Point(rect.x, rect.y),
         new Point(rect.x + rect.width, rect.y + rect.height),
@@ -39,18 +41,18 @@ object Media {
   }
 
   def load(path: String) : Mat = {
-    Highgui.imread(path)
+    Imgcodecs.imread(path)
   }
 
   def load(bytes: Array[Byte]) : Mat = {
-    Highgui.imdecode(
+    Imgcodecs.imdecode(
       new MatOfByte(bytes: _*),
-      Highgui.CV_LOAD_IMAGE_ANYDEPTH | Highgui.CV_LOAD_IMAGE_COLOR
+      Imgcodecs.CV_LOAD_IMAGE_ANYDEPTH | Imgcodecs.CV_LOAD_IMAGE_COLOR
     )
   }
 
   def save(path: String, image: Mat) : Unit = {
-    Highgui.imwrite(path, image)
+    Imgcodecs.imwrite(path, image)
   }
 
   def collect_frames[B](path: String, process: Mat => B) : Seq[B] = {

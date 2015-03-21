@@ -31,6 +31,18 @@ RUN wget -O - https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-li
 
 RUN wget ftp://ftp.pbone.net/mirror/ftp5.gwdg.de/pub/opensuse/repositories/X11:/QtDesktop/CentOS_CentOS-6/i686/scantailor-0.9.11.1-5.17.i686.rpm && yum localinstall -y scantailor-0.9.11.1-5.17.i686.rpm && rm scantailor-0.9.11.1-5.17.i686.rpm
 
+RUN yum install -y git prelink && \
+    git clone --depth 1 https://github.com/loganbruns/opencv.git --branch centos7_opencv_3_0_0_beta_725 && \
+    tar -C /opt -xzf opencv/OpenCV-3.0.0-beta-725-g9683f93-x86_64.tar.gz && \
+    mv /opt/OpenCV-3.0.0* /opt/OpenCV && \
+    execstack -c /opt/OpenCV/share/OpenCV/java/libopencv_java300.so && \
+    rm -rf opencv && \
+    yum remove -y git prelink && \
+    yum autoremove -y && \
+    yum clean all
+
+ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:/opt/OpenCV/lib:/opt/OpenCV/share/OpenCV/java
+
 WORKDIR /etc/ssl/certs
 
 ADD im.crt /etc/ssl/certs/
