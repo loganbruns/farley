@@ -120,9 +120,9 @@ if [ $? -ne 0 ]; then
   rm get-pip.py
 fi
 
-which fig 2>&1 > /dev/null
+which docker-compose 2>&1 > /dev/null
 if [ $? -ne 0 ]; then
-  sudo pip install -U fig
+  sudo pip install -U docker-compose
 fi
 
 grep docker.gedanken.org /etc/sysconfig/docker > /dev/null
