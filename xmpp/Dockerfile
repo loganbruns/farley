@@ -3,15 +3,10 @@ MAINTAINER Logan O'Sullivan Bruns <logan@gedanken.org>
 
 WORKDIR /tmp
 
-RUN yum install -y git && \
-  git clone --depth 1 https://github.com/loganbruns/obuildfactory.git --branch centos7_openjdk8_rpms && \
-  yum remove -y git && \
-  yum autoremove -y && \
-  yum localinstall -y obuildfactory/jdk-1.8.0-openjdk-x86_64-1.8.0.*.rpm && \
-  rm -rf obuildfactory
+RUN yum install -y java-1.8.0-openjdk-devel
 
-ENV JAVA_HOME /opt/obuildfactory/jdk-1.8.0-openjdk-x86_64
-
+ENV JAVA_HOME /usr/lib/jvm/java-1.8.0-openjdk/bin
+-
 ENV PATH $PATH:$JAVA_HOME/bin
 
 WORKDIR /app/models/
