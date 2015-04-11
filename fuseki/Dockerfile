@@ -8,7 +8,7 @@ VOLUME /var/jena-juseki
 
 WORKDIR /app
 
-RUN curl http://mirrors.sonic.net/apache/jena/binaries/jena-fuseki-1.1.1-distribution.tar.gz | tar xzf - && mv jena-fuseki-1.1.1 jena-fuseki
+RUN curl http://mirrors.sonic.net/apache/jena/binaries/jena-fuseki1-1.1.2-distribution.tar.gz | tar xzf - && mv jena-fuseki1-1.1.2 jena-fuseki
 
 ENV FUSEKI_HOME /app/jena-fuseki
 ENV PATH $FUSEKI_HOME:$PATH
