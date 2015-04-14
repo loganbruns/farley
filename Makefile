@@ -25,6 +25,9 @@ publish:
 	sudo docker tag -f farley-xmpp docker.gedanken.org:5000/farley-xmpp
 	sudo docker push docker.gedanken.org:5000/farley-xmpp
 
+coverage:
+	mvn -Pscala scoverage:report
+
 check-versions:
 	mvn versions:display-dependency-updates
 
