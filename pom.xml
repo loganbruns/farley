@@ -25,7 +25,7 @@
     <module>xmpp</module>
   </modules>
   <properties>
-    <scala.version>2.11.2</scala.version>
+    <scala.version>2.11.6</scala.version>
     <scoverage.plugin.version>1.0.4</scoverage.plugin.version>
   </properties>
   <profiles>
@@ -45,18 +45,12 @@
 	<dependency>
 	  <groupId>com.typesafe.akka</groupId>
 	  <artifactId>akka-actor_2.11</artifactId>
-	  <version>2.3.6</version>
+	  <version>2.3.9</version>
 	</dependency>
 	<dependency>
 	  <groupId>org.scalatest</groupId>
 	  <artifactId>scalatest_2.11</artifactId>
-	  <version>2.2.4</version>
-	  <scope>test</scope>
-	</dependency>
-	<dependency>
-	  <groupId>junit</groupId>
-	  <artifactId>junit</artifactId>
-	  <version>3.8.1</version>
+	  <version>3.0.0-SNAP4</version>
 	  <scope>test</scope>
 	</dependency>
       </dependencies>
