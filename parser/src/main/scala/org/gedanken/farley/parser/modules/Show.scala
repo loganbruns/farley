@@ -70,17 +70,18 @@ class Show[Rdf <: RDF, Store](dataset : Store)
 
   def show(matcher: Regex.Match, context: ModuleContext) : String = {
     val name = matcher group "location"
-    val willShow = showName(name, context)
-    if (willShow != null)
-      return willShow
 
-    val imageName = 
-      SExpression.unapply(PhraseTransforms.makePossessive(SExpression.apply(name)) ++ List(List("NN", "image")))
-
-    return showName(imageName, context)
+    Option(showName(matcher group "location", context)) getOrElse 
+    Option(showName(Try(SExpression.unapply(
+      PhraseTransforms.makePossessive(
+        SExpression.apply(name)) ++ List(List("NN", "image"))
+    )) getOrElse null, context)).orNull
   }
 
   def showName(name: String, context: ModuleContext) : String = {
+    if (name == null)
+      return null
+
     val query = s"""
       |prefix farley: <http://gedanken.org/farley/>
       |
