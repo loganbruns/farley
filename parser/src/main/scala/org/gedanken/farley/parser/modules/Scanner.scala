@@ -20,7 +20,7 @@ package org.gedanken.farley.parser.modules
   */
 
 import akka.actor._
-import akka.routing.RoundRobinRouter
+import akka.routing.RoundRobinPool
 import java.io.File
 import java.security.SecureRandom
 import org.gedanken.farley.parser.Message
@@ -46,7 +46,7 @@ class Scanner extends Module {
 
   val random = new SecureRandom
     
-  val scanner = system.actorOf(Props(new ScanActor).withRouter(RoundRobinRouter(nrOfInstances = 10)))
+  val scanner = system.actorOf(Props(new ScanActor).withRouter(RoundRobinPool(nrOfInstances = 10)))
 
   case class Scan(context: ModuleContext, name: String, path: String)
 
@@ -74,7 +74,7 @@ class Scanner extends Module {
     }
   }
 
-  val tailor = system.actorOf(Props(new TailorActor).withRouter(RoundRobinRouter(nrOfInstances = 10)))
+  val tailor = system.actorOf(Props(new TailorActor).withRouter(RoundRobinPool(nrOfInstances = 10)))
 
   class TailorActor extends Actor with ActorLogging {
 

@@ -20,7 +20,7 @@ package org.gedanken.farley.parser.modules
   */
 
 import akka.actor._
-import akka.routing.RoundRobinRouter
+import akka.routing.RoundRobinPool
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
@@ -58,7 +58,7 @@ class Show[Rdf <: RDF, Store](dataset : Store)
 
   val random = new SecureRandom
     
-  val display = system.actorOf(Props(new ShowActor).withRouter(RoundRobinRouter(nrOfInstances = 5)))
+  val display = system.actorOf(Props(new ShowActor).withRouter(RoundRobinPool(nrOfInstances = 5)))
 
   def showLiteral(matcher: Regex.Match, context: ModuleContext) : String = {
     val location = matcher group "location"

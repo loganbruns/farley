@@ -20,6 +20,7 @@ package org.gedanken.farley.parser
   */
 
 import akka.actor._
+import scala.io.StdIn
 
 object CLI {
   val parser = new Parser(
@@ -42,10 +43,10 @@ object CLI {
   def main(args: Array[String]) {
     println("Hello, I'm ready to help you now.")
 
-    var line : String = readLine
+    var line : String = StdIn.readLine
     while (line != null) {
       println(parser.process(line, context))
-      line = readLine
+      line = StdIn.readLine
     }
   }
 }
