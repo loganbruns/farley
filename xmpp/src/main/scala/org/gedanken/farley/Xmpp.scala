@@ -20,6 +20,7 @@ package org.gedanken.farley
   */
 
 import akka.actor._
+import com.typesafe.scalalogging.LazyLogging
 import java.io._
 import java.util.Properties
 import org.gedanken.farley.parser.Parser
@@ -28,7 +29,7 @@ import org.jivesoftware.smack.packet._
 import org.jivesoftware.smack.tcp._
 import scala.collection.mutable.HashSet
 
-object Xmpp {
+object Xmpp extends LazyLogging {
   var connection : XMPPConnection = null
   var chats = new HashSet[Chat]
   val parser = new Parser(
@@ -78,7 +79,7 @@ object Xmpp {
           if (body != null)
             chat.sendMessage(parser.process(message.getBody(), context))
           else {
-            println("Ignoring control message.")
+            logger.info("Ignoring control message.")
 
             userChat.sendMessage("Hello, I'm " + id + " and I'm still ready to help you now.")
           }

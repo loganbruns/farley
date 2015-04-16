@@ -22,6 +22,7 @@ package org.gedanken.farley.parser
 import akka.actor.ActorRef
 import com.hp.hpl.jena.tdb.TDBFactory
 import com.hp.hpl.jena.query.Dataset
+import com.typesafe.scalalogging.LazyLogging
 import opennlp.tools.parser._
 import opennlp.tools.sentdetect._
 import opennlp.tools.cmdline.parser.ParserTool
@@ -32,28 +33,28 @@ import java.io.FileInputStream
 class Parser(
   sentenceModelPath : String, 
   parserModelPath : String,
-  dataSetPath : String) {
+  dataSetPath : String) extends LazyLogging {
 
-  println("Loading sentence model.")
+  logger.info("Loading sentence model.")
   private val sentenceModel = new SentenceModel(new FileInputStream(sentenceModelPath))
   private val detector = new SentenceDetectorME(sentenceModel)
-  println("Done loading sentence model.")
+  logger.info("Done loading sentence model.")
 
-  println("Loading parser model.")
+  logger.info("Loading parser model.")
   private val parserModel = new ParserModel(new FileInputStream(parserModelPath))
   private val parser = ParserFactory.create(parserModel)
-  println("Done loading parser model.")
+  logger.info("Done loading parser model.")
 
-  println("Loading dataset.")
+  logger.info("Loading dataset.")
   private val dataset = TDBFactory.createDataset(dataSetPath)
-  println("Done loading dataset.")
+  logger.info("Done loading dataset.")
 
-  println("Loading modules.")
+  logger.info("Loading modules.")
   private val modules = 
     new Help() :: new Meta[Jena, Dataset](dataset) ::
     new Scanner() :: new Show[Jena, Dataset](dataset) ::
     Nil
-  println("Done loading modules.")
+  logger.info("Done loading modules.")
 
   def process(input: String, context: ActorRef) : String = {
 
