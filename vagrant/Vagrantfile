@@ -10,7 +10,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "chef/centos-7.0"
+  config.vm.box = "chef/centos-7.1"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -90,6 +90,7 @@ if [ ! -f /etc/yum.repos.d/winswitch.repo ]; then
   sudo rpm --import http://winswitch.org/gpg.asc
   cd /etc/yum.repos.d/
   sudo curl -O https://winswitch.org/downloads/CentOS/winswitch.repo
+  sudo sed -i -e 's|CentOS/[^/]*/|CentOS/7.0/|g' winswitch.repo
   sudo yum install -y xpra
 fi
 
