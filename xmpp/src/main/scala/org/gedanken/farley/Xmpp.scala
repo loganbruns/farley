@@ -50,16 +50,31 @@ object Xmpp extends LazyLogging {
     }
   }
 
-  def start() {
-    var props = new Properties();
-    props.load(new FileInputStream(new File(System.getProperty("user.home"),
-                                            ".farley/xmpp.properties")));
-    var user = props.getProperty("xmpp.user");
-    var password = props.getProperty("xmpp.password");
-    var allowedUsers = props.getProperty("xmpp.allowed").split(", ");
-    var id = user.split("@")(0);
-    var domain = user.split("@")(1);
+  def createListener(userChat: Chat, context: ActorRef) : ChatMessageListener = {
+    new ChatMessageListener() {
+      override def processMessage(chat: Chat, message: Message) {
+        val body = message.getBody
+        if (body != null)
+          chat.sendMessage(parser.process(message.getBody(), context))
+        else {
+          logger.info("Ignoring control message.")
 
+          userChat.sendMessage("Hello, I'm " + id + " and I'm still ready to help you now.")
+        }
+      }
+    }
+  }
+
+  val props = new Properties();
+  props.load(new FileInputStream(new File(System.getProperty("user.home"),
+    ".farley/xmpp.properties")));
+  val user = props.getProperty("xmpp.user");
+  val password = props.getProperty("xmpp.password");
+  val allowedUsers = props.getProperty("xmpp.allowed").split(", ");
+  val id = user.split("@")(0);
+  val domain = user.split("@")(1);
+
+  def start() {
     // val verifier = new HostnameVerifier() {
     //   public boolean verify(String hostname, SSLSession session) {
     //     return true;
@@ -89,22 +104,26 @@ object Xmpp extends LazyLogging {
 
       val context = system.actorOf(Props(new Context(userChat)), name = "message-" + allowedUser)
 
-      userChat.addMessageListener(new ChatMessageListener() {
-        override def processMessage(chat: Chat, message: Message) {
-          val body = message.getBody
-          if (body != null)
-            chat.sendMessage(parser.process(message.getBody(), context))
-          else {
-            logger.info("Ignoring control message.")
-
-            userChat.sendMessage("Hello, I'm " + id + " and I'm still ready to help you now.")
-          }
-	}
-      })
+      userChat.addMessageListener(createListener(userChat, context))
 
       userChat.sendMessage("Hello, I'm " + id + " and I'm ready to help you now.")
       chats.add(userChat);
     }
+
+    chatmanager.addChatListener(new ChatManagerListener() {
+      override def chatCreated(chat: Chat, createdLocally: Boolean) {
+        if (createdLocally)
+          return
+
+        val participant = chat.getParticipant.split("/")(0)
+        if (allowedUsers.contains(participant)) {
+          val context = system.actorOf(Props(new Context(chat)), name = "message-$participant")
+	  chat.addMessageListener(createListener(chat, context))
+          chats.add(chat);
+        } else
+          chat.sendMessage(s"Sorry, not allowed to talk to you $participant")
+      }
+    })
   }
 
   def stop() {
