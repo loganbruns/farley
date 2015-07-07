@@ -25,12 +25,14 @@ import java.io._
 import java.util.Properties
 import org.gedanken.farley.parser.Parser
 import org.jivesoftware.smack._
+import org.jivesoftware.smack.chat._
+import org.jivesoftware.smack.java7._
 import org.jivesoftware.smack.packet._
 import org.jivesoftware.smack.tcp._
 import scala.collection.mutable.HashSet
 
 object Xmpp extends LazyLogging {
-  var connection : XMPPConnection = null
+  var connection : AbstractXMPPConnection = null
   var chats = new HashSet[Chat]
   val parser = new Parser(
     "models/en-sent.bin",
@@ -58,8 +60,22 @@ object Xmpp extends LazyLogging {
     var id = user.split("@")(0);
     var domain = user.split("@")(1);
 
-    var config = new ConnectionConfiguration(domain, 5222)
-    config.setCompressionEnabled(true)
+    // val verifier = new HostnameVerifier() {
+    //   public boolean verify(String hostname, SSLSession session) {
+    //     return true;
+    //   }
+    // }
+    val verifier = new Java7HostnameVerifier()
+
+    var config = 
+      XMPPTCPConnectionConfiguration.builder()
+        .setUsernameAndPassword(user, password)
+        .setHost(domain)
+        .setPort(5222)
+        .setCompressionEnabled(true)
+        .setServiceName(domain)
+        .setHostnameVerifier(verifier)
+        .build()
 
     connection = new XMPPTCPConnection(config)
     connection.connect()
@@ -69,11 +85,11 @@ object Xmpp extends LazyLogging {
 
     for (allowedUser <- allowedUsers) {
 
-      var userChat = chatmanager.createChat(allowedUser, null)
+      var userChat = chatmanager.createChat(allowedUser)
 
       val context = system.actorOf(Props(new Context(userChat)), name = "message-" + allowedUser)
 
-      userChat.addMessageListener(new MessageListener() {
+      userChat.addMessageListener(new ChatMessageListener() {
         override def processMessage(chat: Chat, message: Message) {
           val body = message.getBody
           if (body != null)
