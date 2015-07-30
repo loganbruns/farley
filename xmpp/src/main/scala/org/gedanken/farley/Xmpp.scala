@@ -50,7 +50,7 @@ object Xmpp extends LazyLogging {
     }
   }
 
-  def createListener(userChat: Chat, context: ActorRef) : ChatMessageListener = {
+  def createListener(context: ActorRef) : ChatMessageListener = {
     new ChatMessageListener() {
       override def processMessage(chat: Chat, message: Message) {
         val body = message.getBody
@@ -59,7 +59,7 @@ object Xmpp extends LazyLogging {
         else {
           logger.info("Ignoring control message.")
 
-          userChat.sendMessage("Hello, I'm " + id + " and I'm still ready to help you now.")
+          chat.sendMessage("Hello, I'm " + id + " and I'm still ready to help you now.")
         }
       }
     }
@@ -102,9 +102,9 @@ object Xmpp extends LazyLogging {
 
       var userChat = chatmanager.createChat(allowedUser)
 
-      val context = system.actorOf(Props(new Context(userChat)), name = "message-" + allowedUser)
+      val context = system.actorOf(Props(new Context(userChat)), name = s"message-${userChat.getParticipant.replace('/','_')}")
 
-      userChat.addMessageListener(createListener(userChat, context))
+      userChat.addMessageListener(createListener(context))
 
       userChat.sendMessage("Hello, I'm " + id + " and I'm ready to help you now.")
       chats.add(userChat);
@@ -117,8 +117,8 @@ object Xmpp extends LazyLogging {
 
         val participant = chat.getParticipant.split("/")(0)
         if (allowedUsers.contains(participant)) {
-          val context = system.actorOf(Props(new Context(chat)), name = "message-$participant")
-	  chat.addMessageListener(createListener(chat, context))
+          val context = system.actorOf(Props(new Context(chat)), name = s"message-${chat.getParticipant.replace('/','_')}")
+	  chat.addMessageListener(createListener(context))
           chats.add(chat);
         } else
           chat.sendMessage(s"Sorry, not allowed to talk to you $participant")
