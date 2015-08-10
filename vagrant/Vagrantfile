@@ -80,7 +80,7 @@ if [ -d /home/vagrant/projs/farley/vagrant/.ssh ]; then
 fi
 
 yum install -y epel-release
-yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel maven ntpdate unzip xauth xterm emacs git docker prelink x2goserver x2goserver-session x2goclient
+yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel maven ntpdate unzip xauth xterm emacs git prelink x2goserver x2goserver-session x2goclient
 
 for cmd in java javac jar ; do
   alternatives --install /usr/bin/$cmd $cmd /usr/lib/jvm/java-1.8.0-openjdk/bin/$cmd 2
@@ -95,6 +95,11 @@ if [ ! -d /opt/OpenCV ]; then
   execstack -c /opt/OpenCV/share/OpenCV/java/libopencv_java300.so
   rm -rf opencv
   printf 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/OpenCV/lib:/opt/OpenCV/share/OpenCV/java\n' >> ~vagrant/.bashrc
+fi
+
+which docker 2>&1 > /dev/null
+if [ $? -ne 0 ]; then
+  curl -sSL https://get.docker.com/ | sh
 fi
 
 chkconfig docker > /dev/null
