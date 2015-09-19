@@ -80,7 +80,7 @@ if [ -d /home/vagrant/projs/farley/vagrant/.ssh ]; then
 fi
 
 yum install -y epel-release
-yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel maven ntpdate unzip xauth xterm emacs git prelink x2goserver x2goserver-session x2goclient
+yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel maven ntpdate unzip xauth xterm emacs git prelink x2goserver x2goserver-session x2goclient docker
 
 for cmd in java javac jar ; do
   alternatives --install /usr/bin/$cmd $cmd /usr/lib/jvm/java-1.8.0-openjdk/bin/$cmd 2
@@ -97,10 +97,10 @@ if [ ! -d /opt/OpenCV ]; then
   printf 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/OpenCV/lib:/opt/OpenCV/share/OpenCV/java\n' >> ~vagrant/.bashrc
 fi
 
-which docker 2>&1 > /dev/null
-if [ $? -ne 0 ]; then
-  curl -sSL https://get.docker.com/ | sh
-fi
+# which docker 2>&1 > /dev/null
+# if [ $? -ne 0 ]; then
+#   curl -sSL https://get.docker.com/ | sh
+# fi
 
 chkconfig docker > /dev/null
 if [ $? -ne 0 ]; then
@@ -122,7 +122,7 @@ fi
 
 grep docker.gedanken.org /etc/sysconfig/docker > /dev/null
 if [ $? -ne 0 ]; then
-  sudo sed -i -e 's/OPTIONS=/OPTIONS=--insecure-registry docker.gedanken.org:5000 /g' /etc/sysconfig/docker
+  sudo sed -i -e 's/OPTIONS=\'/OPTIONS=\'--insecure-registry docker.gedanken.org:5000 /g' /etc/sysconfig/docker
 fi
 
 which sbt 2>&1 > /dev/null
