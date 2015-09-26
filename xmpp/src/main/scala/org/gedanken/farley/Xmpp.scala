@@ -75,14 +75,9 @@ object Xmpp extends LazyLogging {
   val domain = user.split("@")(1);
 
   def start() {
-    // val verifier = new HostnameVerifier() {
-    //   public boolean verify(String hostname, SSLSession session) {
-    //     return true;
-    //   }
-    // }
     val verifier = new Java7HostnameVerifier()
 
-    var config = 
+    val config = 
       XMPPTCPConnectionConfiguration.builder()
         .setUsernameAndPassword(user, password)
         .setHost(domain)
@@ -102,7 +97,7 @@ object Xmpp extends LazyLogging {
 
       var userChat = chatmanager.createChat(allowedUser)
 
-      val context = system.actorOf(Props(new Context(userChat)), name = s"message-${userChat.getParticipant.replace('/','_')}")
+      val context = system.actorOf(Props(new Context(userChat)), name = s"message-${userChat.getParticipant.replace('/','_')}-${System.currentTimeMillis}")
 
       userChat.addMessageListener(createListener(context))
 
@@ -117,12 +112,32 @@ object Xmpp extends LazyLogging {
 
         val participant = chat.getParticipant.split("/")(0)
         if (allowedUsers.contains(participant)) {
-          val context = system.actorOf(Props(new Context(chat)), name = s"message-${chat.getParticipant.replace('/','_')}")
+          val context = system.actorOf(Props(new Context(chat)), name = s"message-${chat.getParticipant.replace('/','_')}-${System.currentTimeMillis}")
 	  chat.addMessageListener(createListener(context))
           chats.add(chat);
         } else
           chat.sendMessage(s"Sorry, not allowed to talk to you $participant")
       }
+    })
+
+    connection.addConnectionListener(new ConnectionListener() {
+      override def authenticated(connection: XMPPConnection, ignored: Boolean) = Unit
+
+      override def connected(connection: XMPPConnection) = Unit
+
+      override def connectionClosed() = Unit
+
+      override def connectionClosedOnError(e: Exception) = { 
+        logger.error("Connection closed on error", e)
+        logger.info("Attempting restart of xmpp stack")
+        start()
+      }
+
+      override def reconnectingIn(seconds: Int) = Unit
+
+      override def reconnectionFailed(e: Exception) = logger.error("Connection reconnection failed", e)
+
+      override def reconnectionSuccessful() = Unit
     })
   }
 
