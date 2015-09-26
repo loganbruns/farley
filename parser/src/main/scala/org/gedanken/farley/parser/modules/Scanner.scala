@@ -150,7 +150,7 @@ class Scanner extends Module {
     return "Scanning to path " + path 
   }
 
-  val pdfgenerator = system.actorOf(Props(new PDFActor), name = "pdfgenerator")
+  val pdfgenerator = system.actorOf(Props(new PDFActor).withRouter(RoundRobinPool(nrOfInstances = 10)), name = "pdfgenerator")
 
   case class PDF(context: ModuleContext, prefix: String)
 
@@ -165,7 +165,8 @@ class Scanner extends Module {
 
       args.add("convert")
 
-      for (f <- outputDir.list if f.startsWith(prefix)) 
+      val files = outputDir.list.filter(_.startsWith(prefix)).sorted
+      for (f <- files) 
 	args.add((new File(outputDir, f)).getCanonicalPath())
 
       args.add("-units");
