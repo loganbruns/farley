@@ -73,6 +73,7 @@ object Xmpp extends LazyLogging {
   val allowedUsers = props.getProperty("xmpp.allowed").split(", ");
   val id = user.split("@")(0);
   val domain = user.split("@")(1);
+  var greetOnce = true
 
   def start() {
     val verifier = new Java7HostnameVerifier()
@@ -101,7 +102,11 @@ object Xmpp extends LazyLogging {
 
       userChat.addMessageListener(createListener(context))
 
-      userChat.sendMessage("Hello, I'm " + id + " and I'm ready to help you now.")
+      if (greetOnce) {
+        userChat.sendMessage(s"Hello, I'm $id and I'm ready to help you now.")
+        greetOnce = false
+      }
+
       chats.add(userChat);
     }
 
