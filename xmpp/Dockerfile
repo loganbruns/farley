@@ -24,7 +24,7 @@ WORKDIR /app
 
 RUN wget -O - https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2 | tar xjf - && mv phantomjs-1.9.8-linux-x86_64 phantomjs
 
-RUN wget ftp://ftp.pbone.net/mirror/ftp5.gwdg.de/pub/opensuse/repositories/X11:/QtDesktop/CentOS_CentOS-6/i686/scantailor-0.9.11.1-5.17.i686.rpm && yum localinstall -y scantailor-0.9.11.1-5.17.i686.rpm && rm scantailor-0.9.11.1-5.17.i686.rpm
+RUN wget ftp://ftp.pbone.net/mirror/ftp5.gwdg.de/pub/opensuse/repositories/X11:/QtDesktop:/trunk/CentOS_7/x86_64/scantailor-0.9.11.1.1333041297-3.1.x86_64.rpm && yum localinstall -y scantailor-0.9.11.1.1333041297-3.1.x86_64.rpm && rm scantailor-0.9.11.1.1333041297-3.1.x86_64.rpm
 
 RUN yum install -y git prelink && \
     git clone --depth 1 https://github.com/loganbruns/opencv.git --branch centos7_opencv_3_0_0_beta_725 && \
