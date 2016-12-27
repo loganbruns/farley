@@ -56,7 +56,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # end
 
   config.vm.provider "virtualbox" do |vb|
-    vb.customize ["modifyvm", :id, "--memory", "1536"]
+    vb.customize ["modifyvm", :id, "--memory", "2048"]
+    vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/vagrant", "1"]
+    vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/home_vagrant_elisp", "1"]
+    vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/home_vagrant_projs", "1"]
   end
 
   #
@@ -134,7 +137,7 @@ fi
 
 sudo yum install -y kernel-devel gcc
 sudo yum update -y
-sudo /etc/rc.d/init.d/vboxadd setup
+sudo /sbin/rcvboxadd quicksetup
 
 ntpdate -u services.gedanken.org
 ntpdate -u pravda.gedanken.org
