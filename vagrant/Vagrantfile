@@ -125,7 +125,7 @@ fi
 
 grep docker.gedanken.org /etc/sysconfig/docker > /dev/null
 if [ $? -ne 0 ]; then
-  sudo sed -i -e 's/OPTIONS=\'/OPTIONS=\'--insecure-registry docker.gedanken.org:5000 /g' /etc/sysconfig/docker
+  sudo sed -i -e "s/# INSECURE_REGISTRY='--insecure-registry/INSECURE_REGISTRY='--insecure-registry docker.gedanken.org:5000/g" /etc/sysconfig/docker
 fi
 
 which sbt 2>&1 > /dev/null
