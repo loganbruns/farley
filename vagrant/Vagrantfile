@@ -83,7 +83,7 @@ if [ -d /home/vagrant/projs/farley/vagrant/.ssh ]; then
 fi
 
 yum install -y epel-release
-yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel maven ntpdate unzip xauth xterm emacs git prelink x2goserver x2goserver-session x2goclient docker python34 python34-pip python2-pip
+yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel maven ntpdate unzip xauth xterm emacs git prelink x2goserver x2goserver-session x2goclient docker python34 python34-pip python2-pip deltarpm
 pip3 install numpy
 pip3 install --upgrade pip
 pip2 install numpy
@@ -139,8 +139,7 @@ if [ $? -ne 0 ]; then
   rm sbt-0.13.7.rpm
 fi
 
-which gradle 2>&1 > /dev/null
-if [ $? -ne 0 ]; then
+if [ ! -f /usr/local/bin/gradle ]; then
   wget https://services.gradle.org/distributions/gradle-3.4-bin.zip
   unzip -d /usr/local gradle-3.4-bin.zip
   ln -s /usr/local/gradle-3.4/bin/gradle /usr/local/bin/gradle
