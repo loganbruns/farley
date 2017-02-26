@@ -139,6 +139,14 @@ if [ $? -ne 0 ]; then
   rm sbt-0.13.7.rpm
 fi
 
+which gradle 2>&1 > /dev/null
+if [ $? -ne 0 ]; then
+  wget https://services.gradle.org/distributions/gradle-3.4-bin.zip
+  unzip -d /usr/local gradle-3.4-bin.zip
+  ln -s /usr/local/gradle-3.4/bin/gradle /usr/local/bin/gradle
+  rm gradle-3.4-bin.zip
+fi
+
 sudo yum install -y kernel-devel gcc
 sudo yum update -y
 sudo /sbin/rcvboxadd quicksetup
