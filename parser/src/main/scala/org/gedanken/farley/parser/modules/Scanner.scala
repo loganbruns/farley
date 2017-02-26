@@ -175,6 +175,12 @@ class Scanner extends Module {
       args.add("-density");
       args.add("72");
 
+      args.add("-compress");
+      args.add("zip");
+
+      for (f <- outputDir.list if f.startsWith(prefix)) 
+	args.add((new File(outputDir, f)).getCanonicalPath())
+
       args.add((new File(outputDir, pdfname)).getCanonicalPath())
 
       var process = new ProcessBuilder(args).start()
