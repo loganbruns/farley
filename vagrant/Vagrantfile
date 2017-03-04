@@ -83,7 +83,7 @@ if [ -d /home/vagrant/projs/farley/vagrant/.ssh ]; then
 fi
 
 yum install -y epel-release
-yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel maven ntpdate unzip xauth xterm emacs git prelink x2goserver x2goserver-session x2goclient docker python34 python34-pip python2-pip deltarpm
+yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel maven ntpdate unzip xauth xterm emacs git prelink x2goserver x2goserver-session x2goclient docker python34 python34-pip python2-pip R deltarpm
 pip3 install numpy
 pip3 install --upgrade pip
 pip2 install numpy
