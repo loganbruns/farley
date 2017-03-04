@@ -89,7 +89,7 @@ pip3 install --upgrade pip
 pip2 install numpy
 pip2 install --upgrade pip
 
-for cmd in java javac jar ; do
+for cmd in java javac javap jar ; do
   alternatives --install /usr/bin/$cmd $cmd /usr/lib/jvm/java-1.8.0-openjdk/bin/$cmd 2
   alternatives --set $cmd /usr/lib/jvm/java-1.8.0-openjdk/bin/$cmd
 done
