@@ -80,6 +80,7 @@ fi
 if [ -d /home/vagrant/projs/farley/vagrant/.ssh ]; then
   cp /home/vagrant/projs/farley/vagrant/.ssh/id* /home/vagrant/.ssh/
   chown -R vagrant /home/vagrant/.ssh/
+  chmod og-rwx /home/vagrant/.ssh/id_*
 fi
 
 yum install -y epel-release
